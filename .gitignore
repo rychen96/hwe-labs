@@ -163,3 +163,7 @@ cython_debug/
 #.idea/
 .DS_Store
 /resources/file_io_test_json
+week2_sql/reviews_with_tsp_json/_SUCCESS
+week2_sql/reviews_with_tsp_json/._SUCCESS.crc
+week2_sql/reviews_with_tsp_json/.part-00000-4893a83a-657f-4fce-86ca-f256607c7c02-c000.json.crc
+week2_sql/reviews_with_tsp_json/part-00000-4893a83a-657f-4fce-86ca-f256607c7c02-c000.json

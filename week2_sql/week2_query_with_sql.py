@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql import functions
 
-### Setup: Create a SparkSession
+### Setup: Create a SparkSession -- note, to run in the cloud, change "local[1] to something cloud-specific (ie. AWS"
 spark = SparkSession.builder \
     .appName("Renee") \
     .master("local[1]") \
@@ -46,7 +46,7 @@ reviews_with_tsp.show(n=5, truncate=False)
 # Which value appears to be the most common?
 product_df = spark.sql("SELECT product_category FROM reviews_view")
 # product_df.show(50)
-print(f"\nQ6: based on the top 50 rows, the most common product category value is Digital Video Games.\n")
+print(f"\nQ6: Based on the top 50 rows, the most common product category value is Digital Video Games.\n")
 
 # Question 7: Find the most helpful review in the dataframe - the one with the highest number of helpful votes.
 # What is the product title for that review? How many helpful votes did it have?
