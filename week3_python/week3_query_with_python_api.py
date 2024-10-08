@@ -42,11 +42,28 @@ reviews = spark.read.csv("resources/reviews.tsv.gz", sep='\t', header=True)
 #Question 2: Display the schema of the dataframe.
 print(f"\nQ2: The reviews dataframe has been made with the following schema:\n")
 reviews.printSchema()
+# root
+#  |-- marketplace: string (nullable = true)
+#  |-- customer_id: string (nullable = true)
+#  |-- review_id: string (nullable = true)
+#  |-- product_id: string (nullable = true)
+#  |-- product_parent: string (nullable = true)
+#  |-- product_title: string (nullable = true)
+#  |-- product_category: string (nullable = true)
+#  |-- star_rating: string (nullable = true)
+#  |-- helpful_votes: string (nullable = true)
+#  |-- total_votes: string (nullable = true)
+#  |-- vine: string (nullable = true)
+#  |-- verified_purchase: string (nullable = true)
+#  |-- review_headline: string (nullable = true)
+#  |-- review_body: string (nullable = true)
+#  |-- purchase_date: string (nullable = true)
 
 #Question 3: How many records are in the dataframe? 
 #Store this number in a variable named "reviews_count".
 reviews_count = reviews.count()
 print(f"\nQ3: The number of reviews is {reviews_count}.\n")
+# reviews_count = 145431.
 
 #Question 4: Print the first 5 rows of the dataframe. 
 #Some of the columns are long - print the entire record, regardless of length.
@@ -60,14 +77,18 @@ reviews_pc = reviews.select('product_category')
 # reviews_pc.show(n=50)
 print(f"\nQ5: Based on the first 50 rows of reviews_pc, the most common product category is Digital Video Games.\n")
 
+
 #Question 6: Find the most helpful review in the dataframe - the one with the highest number of helpful votes.
 #What is the product title for that review? How many helpful votes did it have?
 print(f"\nQ6: The most helpful review was the following:\n")
-reviews.select('product_title', 'helpful_votes').orderBy(reviews['helpful_votes'].desc()).limit(1).show()
+reviews_votes_cast = reviews.withColumn("helpful_votes", col("helpful_votes").cast("Integer"))
+reviews_votes_cast.select('product_title', 'helpful_votes').orderBy(reviews_votes_cast['helpful_votes'].desc()).limit(1).show()
+# SimCity - Limited Edition (5068 helpful_votes)
 
 #Question 7: How many reviews have a 5 star rating?
 five_star = reviews.filter(reviews['star_rating'] == '5').count()
 print(f"\nQ7: There were {five_star} reviews with a 5-star rating.\n")
+#5-star = 80677
 
 #Question 8: Currently every field in the data file is interpreted as a string, but there are 3 that should really be numbers.
 #Create a new dataframe with just those 3 columns, except cast them as "int"s.
@@ -85,6 +106,7 @@ date_with_most_purchases = reviews.withColumn("purchase_date", col("purchase_dat
     .orderBy(col('count').desc())
 print(f"\nQ9: The date with the most purchases is:\n")
 date_with_most_purchases.limit(1).show()
+#date = 2013-03-07, count = 760
 
 #Question 10: Add a column to the dataframe named "review_timestamp", representing the current time on your computer. 
 #Hint: Check the documentation for a function that can help: https://spark.apache.org/docs/3.1.3/api/python/reference/pyspark.sql.html#functions
@@ -93,13 +115,47 @@ reviews = reviews.withColumn('review_timestamp', current_timestamp())
 print(f"\nQ10: The column 'review_timestamp' has been added to the reviews dataframe (Sample row below).\n")
 reviews.show(n=1, truncate=True)
 reviews.printSchema()
+# root
+#  |-- marketplace: string (nullable = true)
+#  |-- customer_id: string (nullable = true)
+#  |-- review_id: string (nullable = true)
+#  |-- product_id: string (nullable = true)
+#  |-- product_parent: string (nullable = true)
+#  |-- product_title: string (nullable = true)
+#  |-- product_category: string (nullable = true)
+#  |-- star_rating: string (nullable = true)
+#  |-- helpful_votes: string (nullable = true)
+#  |-- total_votes: string (nullable = true)
+#  |-- vine: string (nullable = true)
+#  |-- verified_purchase: string (nullable = true)
+#  |-- review_headline: string (nullable = true)
+#  |-- review_body: string (nullable = true)
+#  |-- purchase_date: string (nullable = true)
+#  |-- review_timestamp: timestamp (nullable = false)
 
 #Question 11: Write the dataframe with load timestamp to s3a://hwe-$CLASS/$HANDLE/bronze/reviews_static in Parquet format.
 #Make sure to write it using overwrite mode: append will keep appending duplicates, which will cause problems in later labs...
 reviews.write.mode("overwrite").parquet(f"s3a://hwe-{class_name}/{handle}/bronze/reviews_static")
 print(f"\nQ11: Wrote reviews_static! Has the following schema:\n")
 reviews.printSchema()
-
+# root
+#  |-- marketplace: string (nullable = true)
+#  |-- customer_id: string (nullable = true)
+#  |-- review_id: string (nullable = true)
+#  |-- product_id: string (nullable = true)
+#  |-- product_parent: string (nullable = true)
+#  |-- product_title: string (nullable = true)
+#  |-- product_category: string (nullable = true)
+#  |-- star_rating: string (nullable = true)
+#  |-- helpful_votes: string (nullable = true)
+#  |-- total_votes: string (nullable = true)
+#  |-- vine: string (nullable = true)
+#  |-- verified_purchase: string (nullable = true)
+#  |-- review_headline: string (nullable = true)
+#  |-- review_body: string (nullable = true)
+#  |-- purchase_date: string (nullable = true)
+#  |-- review_timestamp: timestamp (nullable = false)
+ 
 #Question 12: Read the tab separated file named "resources/customers.tsv.gz" into a dataframe
 #Write to S3 under s3a://hwe-$CLASS/$HANDLE/bronze/customers
 #Make sure to write it using overwrite mode: append will keep appending duplicates, which will cause problems in later labs...
@@ -108,6 +164,22 @@ reviews_original = spark.read.csv("resources/reviews.tsv.gz", sep='\t', header=T
 reviews_original.write.mode("overwrite").parquet(f"s3a://hwe-{class_name}/{handle}/bronze/customers")
 print(f"\nQ12: Wrote customers! Has the following schema:\n")
 reviews_original.printSchema()
+# root
+#  |-- marketplace: string (nullable = true)
+#  |-- customer_id: string (nullable = true)
+#  |-- review_id: string (nullable = true)
+#  |-- product_id: string (nullable = true)
+#  |-- product_parent: string (nullable = true)
+#  |-- product_title: string (nullable = true)
+#  |-- product_category: string (nullable = true)
+#  |-- star_rating: string (nullable = true)
+#  |-- helpful_votes: string (nullable = true)
+#  |-- total_votes: string (nullable = true)
+#  |-- vine: string (nullable = true)
+#  |-- verified_purchase: string (nullable = true)
+#  |-- review_headline: string (nullable = true)
+#  |-- review_body: string (nullable = true)
+#  |-- purchase_date: string (nullable = true)
 
 # Stop the SparkSession
 spark.stop()
