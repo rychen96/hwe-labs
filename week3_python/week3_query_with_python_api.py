@@ -97,7 +97,8 @@ reviews.printSchema()
 #Question 11: Write the dataframe with load timestamp to s3a://hwe-$CLASS/$HANDLE/bronze/reviews_static in Parquet format.
 #Make sure to write it using overwrite mode: append will keep appending duplicates, which will cause problems in later labs...
 reviews.write.mode("overwrite").parquet(f"s3a://hwe-{class_name}/{handle}/bronze/reviews_static")
-print(f"\nQ11: Wrote reviews_static!\n")
+print(f"\nQ11: Wrote reviews_static! Has the following schema:\n")
+reviews.printSchema()
 
 #Question 12: Read the tab separated file named "resources/customers.tsv.gz" into a dataframe
 #Write to S3 under s3a://hwe-$CLASS/$HANDLE/bronze/customers
@@ -105,7 +106,8 @@ print(f"\nQ11: Wrote reviews_static!\n")
 #There are no questions to answer about this data set right now, but you will use it in a later lab...
 reviews_original = spark.read.csv("resources/reviews.tsv.gz", sep='\t', header=True)
 reviews_original.write.mode("overwrite").parquet(f"s3a://hwe-{class_name}/{handle}/bronze/customers")
-print(f"\nQ12: Wrote customers!\n")
+print(f"\nQ12: Wrote customers! Has the following schema:\n")
+reviews_original.printSchema()
 
 # Stop the SparkSession
 spark.stop()
