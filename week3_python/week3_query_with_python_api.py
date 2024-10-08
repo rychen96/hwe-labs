@@ -77,7 +77,6 @@ reviews_pc = reviews.select('product_category')
 # reviews_pc.show(n=50)
 print(f"\nQ5: Based on the first 50 rows of reviews_pc, the most common product category is Digital Video Games.\n")
 
-
 #Question 6: Find the most helpful review in the dataframe - the one with the highest number of helpful votes.
 #What is the product title for that review? How many helpful votes did it have?
 print(f"\nQ6: The most helpful review was the following:\n")
