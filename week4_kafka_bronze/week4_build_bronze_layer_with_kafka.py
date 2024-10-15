@@ -43,14 +43,23 @@ df = spark \
     .option("kafka.bootstrap.servers", kafka_bootstrap_servers) \
     .option("subscribe", kafka_topic) \
     .option("startingOffsets", "earliest") \
-    .option("maxOffsetsPerTrigger", "1000") \
+    .option("maxOffsetsPerTrigger", "10") \
     .option("kafka.security.protocol", "SASL_SSL") \
     .option("kafka.sasl.mechanism", "SCRAM-SHA-512") \
     .option("kafka.sasl.jaas.config", getScramAuthString(username, password)) \
-    .load()
+    .load() \
+    .selectExpr("CAST(value AS STRING)") #this helps display the values so they're more readable, not just bytes
+    #.select(col("value").cast("string")) #different way of doing the selectExpr
+df.printSchema()
 
-# Process the received data
-query = None
+# Process the received data. Note, turning off truncate lets us view the data. Also note that "show" does not work with
+query = df \
+  .writeStream \
+  .format("console") \
+  .outputMode("append") \
+  .option("truncate", "false") \
+  .option("checkpointLocation", "C:/Users/ryche/Documents/data_engineering/tmp/kafka-checkpoint") \
+  .start()
 
 # Wait for the streaming query to finish
 query.awaitTermination()
