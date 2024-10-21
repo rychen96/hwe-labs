@@ -66,7 +66,8 @@ df = spark \
     "split_values[10] as vine",
     "split_values[11] as verified_purchase",
     "split_values[12] as review_headline",
-    "split_values[13] as purchase_date" 
+    "split_values[13] as review_body",
+    "split_values[14] as purchase_date" 
 ) \
     .withColumn('review_timestamp', current_timestamp())
 
