@@ -74,3 +74,27 @@ streaming_query.start().awaitTermination()
 
 ## Stop the SparkSession
 spark.stop()
+
+
+## silver_data schema:
+#  |-- customer_id: string (nullable = true)
+#  |-- marketplace: string (nullable = true)
+#  |-- review_id: string (nullable = true)
+#  |-- product_id: string (nullable = true)
+#  |-- product_parent: string (nullable = true)
+#  |-- product_title: string (nullable = true)
+#  |-- product_category: string (nullable = true)
+#  |-- star_rating: string (nullable = true)
+#  |-- helpful_votes: string (nullable = true)
+#  |-- total_votes: string (nullable = true)
+#  |-- vine: string (nullable = true)
+#  |-- verified_purchase: string (nullable = true)
+#  |-- review_headline: string (nullable = true)
+#  |-- review_body: string (nullable = true)
+#  |-- purchase_date: string (nullable = true)
+#  |-- review_timestamp: timestamp (nullable = true)
+#  |-- customer_name: string (nullable = true)
+#  |-- gender: string (nullable = true)
+#  |-- date_of_birth: string (nullable = true)
+#  |-- city: string (nullable = true)
+#  |-- state: string (nullable = true)
