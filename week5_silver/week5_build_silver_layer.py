@@ -51,20 +51,24 @@ bronze_reviews_schema = StructType([
 
 #week 4, streaming
 bronze_reviews = spark.readStream.schema(bronze_reviews_schema).parquet(f"s3a://hwe-{class_name}/{handle}/bronze/reviews")
-
 #week 3, static
 bronze_customers = spark.read.parquet(f"s3a://hwe-{class_name}/{handle}/bronze/customers")
 
 #join two above
-silver_data = bronze_reviews.join(bronze_customers, on="review_id", how="inner")
-
+silver_data = bronze_reviews.join(bronze_customers, on="customer_id", how="inner")
+## alt option uing spark sql
+# bronze_reviews.createOrReplaceTempView("rev_view")
+# bronze_customers.createOrReplaceTempView("cust_view")
+# silver_data = spark.sql("""SELECT * FROM rev_view rev 
+#           INNER JOIN cust_view cust
+#           ON rev.customer_id = cust.customer_id""")
 
 streaming_query = silver_data \
   .writeStream \
   .outputMode("append") \
   .format("parquet") \
   .option("path", f"s3a://hwe-{class_name}/{handle}/silver/reviews") \
-  .option("checkpointLocation", "C:/Users/ryche/Documents/data_engineering/tmp2/kafka-checkpoint-silver")
+  .option("checkpointLocation", "C:/Users/ryche/Documents/data_engineering/tmp/kafka-checkpoint-silver")
 
 streaming_query.start().awaitTermination()
 

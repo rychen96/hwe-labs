@@ -80,7 +80,7 @@ query = df \
   .outputMode("append") \
   .format("parquet") \
   .option("path", f"s3a://hwe-{class_name}/{handle}/bronze/reviews") \
-  .option("checkpointLocation", "C:/Users/ryche/Documents/data_engineering/tmp/kafka-checkpoint") \
+  .option("checkpointLocation", "C:/Users/ryche/Documents/data_engineering/tmp/kafka-checkpoint-bronze") \
   .start()
 
 # Process the received data. Note, turning off truncate lets us view the data. Also note that "show" does not work with streaming queries.
