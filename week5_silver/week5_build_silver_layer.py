@@ -54,14 +54,14 @@ bronze_reviews = spark.readStream.schema(bronze_reviews_schema).parquet(f"s3a://
 #week 3, static
 bronze_customers = spark.read.parquet(f"s3a://hwe-{class_name}/{handle}/bronze/customers")
 
-#join two above
-silver_data = bronze_reviews.join(bronze_customers, on="customer_id", how="inner")
-## alt option uing spark sql
-# bronze_reviews.createOrReplaceTempView("rev_view")
-# bronze_customers.createOrReplaceTempView("cust_view")
-# silver_data = spark.sql("""SELECT * FROM rev_view rev 
-#           INNER JOIN cust_view cust
-#           ON rev.customer_id = cust.customer_id""")
+## join two above
+# silver_data = bronze_reviews.join(bronze_customers, on="customer_id", how="inner")
+# alt option uing spark sql
+bronze_reviews.createOrReplaceTempView("rev_view")
+bronze_customers.createOrReplaceTempView("cust_view")
+silver_data = spark.sql("""SELECT * FROM rev_view rev 
+          INNER JOIN cust_view cust
+          ON rev.customer_id = cust.customer_id""")
 
 streaming_query = silver_data \
   .writeStream \
