@@ -61,7 +61,8 @@ bronze_reviews.createOrReplaceTempView("rev_view")
 bronze_customers.createOrReplaceTempView("cust_view")
 silver_data = spark.sql("""SELECT * FROM rev_view rev 
           INNER JOIN cust_view cust
-          ON rev.customer_id = cust.customer_id""")
+          ON rev.customer_id = cust.customer_id
+          WHERE rev.verified_purchase = 'Y'""")
 
 streaming_query = silver_data \
   .writeStream \
