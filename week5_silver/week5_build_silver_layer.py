@@ -59,10 +59,18 @@ bronze_customers = spark.read.parquet(f"s3a://hwe-{class_name}/{handle}/bronze/c
 # alt option uing spark sql
 bronze_reviews.createOrReplaceTempView("rev_view")
 bronze_customers.createOrReplaceTempView("cust_view")
-silver_data = spark.sql("""SELECT * FROM rev_view rev 
+silver_data = spark.sql("""SELECT 
+          rev.*,
+          cust.customer_name,
+          cust.gender,
+          cust.date_of_birth,
+          cust.city,
+          cust.state
+          FROM rev_view rev
           INNER JOIN cust_view cust
           ON rev.customer_id = cust.customer_id
           WHERE rev.verified_purchase = 'Y'""")
+# silver_data.printSchema()
 
 streaming_query = silver_data \
   .writeStream \
